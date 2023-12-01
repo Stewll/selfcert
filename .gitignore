@@ -1,2 +1,3 @@
-./Results/*
-./certs.tar.gz
+Results/*
+#Results/certs.tar.gz.enc
+certs.tar.gz
