@@ -5,4 +5,4 @@ services:
       context: ./build
       dockerfile: Dockerfile
     volumes:
-      - ./Results:/app/r
+      - ./Results:/app/Results
