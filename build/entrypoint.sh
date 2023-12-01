@@ -4,65 +4,60 @@
 source crt.conf
 
 # Clean up
-rm -rf r/
+rm -rf Results/
 
 
 # Create Directories
-mkdir -p r/Keys
-mkdir -p r/CAcerts
-mkdir -p r/certs
-mkdir -p r/CSR
-mkdir -p r/Pass
+mkdir -p Results/Keys
+mkdir -p Results/CAcerts
+mkdir -p Results/certs
+mkdir -p Results/CSR
+mkdir -p Results/Pass
 
-# Generate Root Key                 r/Keys/rootCA.key
-openssl genpkey -algorithm RSA -out r/Keys/rootCA.key -aes256 -pass pass:$ROOT_KEY_PASS
+# Generate Root Key                 Results/Keys/rootCA.key
+openssl genpkey -algorithm RSA -out Results/Keys/rootCA.key -aes256 -pass pass:$ROOT_KEY_PASS
 # Create Root Certificate
-openssl req -x509 -new -nodes -key r/Keys/rootCA.key \
-    -sha256 -days 1 -out r/CAcerts/root.pem -passin pass:$ROOT_KEY_PASS \
+openssl req -x509 -new -nodes -key Results/Keys/rootCA.key \
+    -sha256 -days 1 -out Results/CAcerts/root.pem -passin pass:$ROOT_KEY_PASS \
     -subj "/C=$COUNTRY/ST=$STATE/L=$LOCALITY/O=$ORGANIZATION/OU=$ORG_UNIT/CN=$COMMON_NAME"
-
 # Generate CSR Key
-openssl genpkey -algorithm RSA -out r/Keys/csr.key -aes256 -pass pass:$CSR_KEY_PASS
-
+openssl genpkey -algorithm RSA -out Results/Keys/csr.key -aes256 -pass pass:$CSR_KEY_PASS
 # Generate CSR
-openssl req -new -key r/Keys/csr.key -out r/CSR/csr.csr -passin pass:$CSR_KEY_PASS \
+openssl req -new -key Results/Keys/csr.key -out Results/CSResults/csr.csr -passin pass:$CSR_KEY_PASS \
     -subj "/C=$COUNTRY/ST=$STATE/L=$LOCALITY/O=$ORGANIZATION/OU=$ORG_UNIT/CN=$COMMON_NAME"
-
 # Sign CSR with Root CA
-openssl x509 -req -in r/CSR/csr.csr -CA r/CAcerts/root.pem -CAkey r/Keys/rootCA.key \
-    -CAcreateserial -out r/certs/certificate.crt -days 500 -sha256 -passin pass:$ROOT_KEY_PASS
+openssl x509 -req -in Results/CSResults/csr.csr -CA Results/CAcerts/root.pem -CAkey Results/Keys/rootCA.key \
+    -CAcreateserial -out Results/certs/certificate.crt -days 500 -sha256 -passin pass:$ROOT_KEY_PASS
 
-#Spit out the certificates, r/keys, passwords and CSRs to the console
+
+#Spit out the certificates, keys, passwords and CSRs to the console
 echo "Root Key: id_rsa_root"  
-cat r/Keys/rootCA.key
+cat Results/Keys/rootCA.key
 echo ""
 echo "CSR Key: id_rsa_csr"
-cat r/Keys/csr.key
+cat Results/Keys/csr.key
 echo ""
 echo "Certificate Signing Request: csr.csr"
-cat r/CSR/csr.csr
+cat Results/CSResults/csr.csr
 echo ""
 echo "Root Certificate: root.pem"
-cat r/CAcerts/root.pem
+cat Results/CAcerts/root.pem
 echo ""
 echo "Signed Certificate: certificate.crt"
-cat r/certs/certificate.crt
+cat Results/certs/certificate.crt
 echo ""
 echo "Tarball Password: $ROOT_KEY_PASS"
-# Create the encrypted tarball of the r/keys and certs.
-tar -czvf certs.tar.gz r/Keys/ r/CAcerts/ r/certs/ r/CSR/ crt.conf r/Pass/ 2>&1 > /dev/null
-openssl enc -pbkdf2 -aes-256-cbc -md sha512 -salt \
--in certs.tar.gz -out r/certs.tar.gz.enc -pass pass:$ROOT_KEY_PASS
+# Create the encrypted tarball of the Results/keys and certs.
+tar -czf certs.tar.gz Results/ crt.conf  && openssl enc -pbkdf2 -aes-256-cbc -md sha512 -salt -in certs.tar.gz -out Results/certs.tar.gz.enc -pass pass:$ROOT_KEY_PASS
 # Spit out how to decrypt the tarball to the console
 echo "To decrypt the tarball, run the following command:"
-echo "openssl enc -pbkdf2 -aes-256-cbc -md sha512 -d -salt \\
-    -in Results/certs.tar.gz.enc -out certs.tar.gz -pass pass:$ROOT_KEY_PASS" 
+echo "openssl enc -pbkdf2 -aes-256-cbc -md sha512 -d -salt -in Results/certs.tar.gz.enc -out certs.tar.gz -pass pass:$ROOT_KEY_PASS" 
 echo ""
-echo "Root Key Password: $ROOT_KEY_PASS" && echo $ROOT_KEY_PASS > r/rootCA.key.pass
-echo "CSR Key Password: $CSR_KEY_PASS" && echo $CSR_KEY_PASS > r/csr.key.pass
+echo "Root Key Password: $ROOT_KEY_PASS" && echo $ROOT_KEY_PASS > Results/rootCA.key.pass
+echo "CSR Key Password: $CSR_KEY_PASS" && echo $CSR_KEY_PASS > Results/csr.key.pass
 
 # Clean up
-rm -rf r/Keys/ r/CAcerts/ r/certs/ r/CSR/ /crt.conf r/certs.tar.gz r/rootCA.key.pass r/csr.key.pass r/Pass/
+rm -rf Results/ crt.conf 
 
 # Exit
 exit 0
