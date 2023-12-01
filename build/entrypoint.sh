@@ -3,8 +3,8 @@
 # Read Configuration
 source crt.conf
 
-# Clean up
-rm -rf Results/
+# Pre Clean up
+rm -rf Results/Keys Results/CAcerts Results/certs Results/CSR Results/Pass  crt.conf certs.tar.gz Results/certs.tar.gz.enc
 
 
 # Create Directories
