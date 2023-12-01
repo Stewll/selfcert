@@ -4,7 +4,7 @@
 source crt.conf
 
 # Pre Clean up
-rm -rf Results/Keys Results/CAcerts Results/certs Results/CSR Results/Pass  crt.conf certs.tar.gz Results/certs.tar.gz.enc
+rm -rf Results/Keys Results/CAcerts Results/certs Results/CSR Results/Pass certs.tar.gz Results/certs.tar.gz.enc
 
 
 # Create Directories
