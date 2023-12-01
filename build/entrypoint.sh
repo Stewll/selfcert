@@ -3,6 +3,10 @@
 # Read Configuration
 source crt.conf
 
+# Clean up
+rm -rf r/
+
+
 # Create Directories
 mkdir -p r/Keys
 mkdir -p r/CAcerts
@@ -52,7 +56,7 @@ openssl enc -pbkdf2 -aes-256-cbc -md sha512 -salt \
 # Spit out how to decrypt the tarball to the console
 echo "To decrypt the tarball, run the following command:"
 echo "openssl enc -pbkdf2 -aes-256-cbc -md sha512 -d -salt \\
-    -in Reslts/certs.utar.gz.enc -out certs.tar.gz -pass pass:$ROOT_KEY_PASS" 
+    -in Results/certs.tar.gz.enc -out certs.tar.gz -pass pass:$ROOT_KEY_PASS" 
 echo ""
 echo "Root Key Password: $ROOT_KEY_PASS" && echo $ROOT_KEY_PASS > r/rootCA.key.pass
 echo "CSR Key Password: $CSR_KEY_PASS" && echo $CSR_KEY_PASS > r/csr.key.pass
