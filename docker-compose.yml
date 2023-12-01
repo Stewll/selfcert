@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  selfcert-gen:
+    build:
+      context: ./build
+      dockerfile: Dockerfile
+    volumes:
+      - ./Results:/app/r
