@@ -57,7 +57,7 @@ echo "Root Key Password: $ROOT_KEY_PASS" && echo $ROOT_KEY_PASS > Results/rootCA
 echo "CSR Key Password: $CSR_KEY_PASS" && echo $CSR_KEY_PASS > Results/csr.key.pass
 
 # Clean up
-rm -rf Results/Keys Results/CAcerts Results/certs Results/CSR Results/Pass  crt.conf certs.tar.gz
+rm -rf Results/Keys Results/CAcerts Results/certs Results/CSR Results/Pass  crt.conf certs.tar.gz csr.key.pass rootCA.key.pass
 
 # Exit
 exit 0
