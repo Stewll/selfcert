@@ -18,7 +18,7 @@ mkdir -p Results/Pass
 openssl genpkey -algorithm RSA -out Results/Keys/rootCA.key -aes256 -pass pass:$ROOT_KEY_PASS
 # Create Root Certificate
 openssl req -x509 -new -nodes -key Results/Keys/rootCA.key \
-    -sha256 -days 1 -out Results/CAcerts/root.pem -passin pass:$ROOT_KEY_PASS \
+    -sha256 -days $validity -out Results/CAcerts/root.pem -passin pass:$ROOT_KEY_PASS \
     -subj "/C=$COUNTRY/ST=$STATE/L=$LOCALITY/O=$ORGANIZATION/OU=$ORG_UNIT/CN=$COMMON_NAME"
 # Generate CSR Key
 openssl genpkey -algorithm RSA -out Results/Keys/csr.key -aes256 -pass pass:$CSR_KEY_PASS
@@ -27,7 +27,7 @@ openssl req -new -key Results/Keys/csr.key -out Results/CSR/csr.csr -passin pass
     -subj "/C=$COUNTRY/ST=$STATE/L=$LOCALITY/O=$ORGANIZATION/OU=$ORG_UNIT/CN=$COMMON_NAME"
 # Sign CSR with Root CA
 openssl x509 -req -in Results/CSR/csr.csr -CA Results/CAcerts/root.pem -CAkey Results/Keys/rootCA.key \
-    -CAcreateserial -out Results/certs/certificate.crt -days 500 -sha256 -passin pass:$ROOT_KEY_PASS
+    -CAcreateserial -out Results/certs/certificate.crt -days $validity -sha256 -passin pass:$ROOT_KEY_PASS
 
 echo ""
 #Spit out the certificates, keys, passwords and CSRs to the console
