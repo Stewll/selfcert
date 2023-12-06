@@ -13,8 +13,10 @@ mkdir -p Results/CAcerts
 mkdir -p Results/certs
 mkdir -p Results/CSR
 mkdir -p Results/Pass
+mkdir -p Results/pfx_file_for_keepass
 
-# Generate Root Key                 Results/Keys/rootCA.key
+
+# Generate Root Key
 openssl genpkey -algorithm RSA -out Results/Keys/rootCA.key -aes256 -pass pass:$ROOT_KEY_PASS
 # Create Root Certificate
 openssl req -x509 -new -nodes -key Results/Keys/rootCA.key \
@@ -28,6 +30,9 @@ openssl req -new -key Results/Keys/csr.key -out Results/CSR/csr.csr -passin pass
 # Sign CSR with Root CA
 openssl x509 -req -in Results/CSR/csr.csr -CA Results/CAcerts/root.pem -CAkey Results/Keys/rootCA.key \
     -CAcreateserial -out Results/certs/certificate.crt -days $validity -sha256 -passin pass:$ROOT_KEY_PASS
+# Create PFX file for Keepass containing the root key and the root certificate
+openssl pkcs12 -export -out Results/pfx_file_for_keepass/dynamics.pfx -inkey Results/Keys/rootCA.key -in Results/CAcerts/root.pem -passout pass:$ROOT_KEY_PASS
+
 
 echo ""
 # Spit out the certificates, keys, passwords and CSRs to the console
